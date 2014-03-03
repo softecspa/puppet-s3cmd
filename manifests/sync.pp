@@ -29,8 +29,6 @@ define s3cmd::sync (
   $reverse = false,
   )
 {
-  // è sbagliato
-
   $real_prefix_ = $prefix ? {
     false      => '',
     default => $prefix,
