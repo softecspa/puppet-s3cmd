@@ -27,11 +27,17 @@ define s3cmd::sync (
   $single  = false,
   $prefix  = false,
   $reverse = false,
+  $delete  = false
   )
 {
-  $real_prefix_ = $prefix ? {
+  $real_prefix = $prefix ? {
     false      => '',
     default => $prefix,
+  }
+  
+  $real_delete = $delete ? {
+    false   => '',
+    default => '--delete-removed'
   }
 
   if $reverse {
@@ -46,12 +52,12 @@ define s3cmd::sync (
     }
 
     exec { "sync s3://$bucket_name/$real_prefix --> $source":
-      command => "s3cmd sync --no-progress s3://$bucket_name/$real_prefix $source",
+      command => "s3cmd sync --no-progress $real_delete s3://$bucket_name/$real_prefix $source",
       require => File[$source],
     }
   } else {
-      exec {"sync $source --> s3://$bucket_name/$real_prefix":
-        command => "s3cmd sync --no-progress $source s3://$bucket_name/$real_prefix",
+      exec { "sync $source --> s3://$bucket_name/$real_prefix":
+        command => "s3cmd sync --no-progress $real_delete $source s3://$bucket_name/$real_prefix",
         onlyif  => "stat $source",
       }
   }
