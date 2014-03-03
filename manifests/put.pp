@@ -18,7 +18,7 @@ define s3cmd::put (
   $bucket_name  = '',
   $prefix       = '',
   ) {
-    exec {"cp $source -> s3://$bucket_name/$path":
+    exec { "cp $source -> s3://$bucket_name/$path":
       command => "s3cmd put $source s3://$bucket_name/$prefix/",
       onlyif  => "stat $source",
     }

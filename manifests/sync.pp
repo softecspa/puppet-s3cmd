@@ -25,33 +25,36 @@ define s3cmd::sync (
   $source,
   $bucket_name,
   $single  = false,
-  $prefix  = undef,
+  $prefix  = false,
   $reverse = false,
-  ) {
+  )
+{
+  // è sbagliato
 
-    if $prefix == undef {
-      $prefix = $source
-    }
+  $real_prefix_ = $prefix ? {
+    false      => '',
+    default => $prefix,
+  }
 
-    if $reverse {
-      if $single {
-        $ensure_ = 'present'
-      } else {
-        $ensure_ = 'directory'
-      }
-
-      file {
-        $source:  ensure  => $ensure_;
-      }
-
-      exec {"sync s3://$bucket_name/$prefix --> $source":
-         command => "s3cmd sync --no-progress s3://$bucket_name/$prefix $source",
-         require => File[$source],
-      }
+  if $reverse {
+    if $single {
+      $ensure_ = 'present'
     } else {
-        exec {"sync $source --> s3://$bucket_name/$prefix":
-          command => "s3cmd sync --no-progress $source s3://$bucket_name/$prefix",
-          onlyif  => "stat $source",
-        }
+      $ensure_ = 'directory'
     }
+
+    file {
+      $source:  ensure  => $ensure_;
+    }
+
+    exec { "sync s3://$bucket_name/$real_prefix --> $source":
+      command => "s3cmd sync --no-progress s3://$bucket_name/$real_prefix $source",
+      require => File[$source],
+    }
+  } else {
+      exec {"sync $source --> s3://$bucket_name/$real_prefix":
+        command => "s3cmd sync --no-progress $source s3://$bucket_name/$real_prefix",
+        onlyif  => "stat $source",
+      }
+  }
 }

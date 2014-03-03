@@ -26,7 +26,6 @@
 #
 # Felice Pizzurro <felice.pizzurro@softecspa.it>
 #
-
 class s3cmd ($access_key='', $secret_key='', $https=true) {
 
   if ( $access_key == '' or $secret_key == '') {
@@ -43,5 +42,5 @@ class s3cmd ($access_key='', $secret_key='', $https=true) {
   include s3cmd::install
   include s3cmd::config
 
-  Class["s3cmd::install"] -> Class["s3cmd::config"]
+  Class['s3cmd::install'] -> Class['s3cmd::config']
 }
