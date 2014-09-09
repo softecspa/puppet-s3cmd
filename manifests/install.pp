@@ -1,11 +1,43 @@
-# TODO:
+# === Class: s3cmd::install
 #
-#wget -O- -q http://s3tools.org/repo/deb-all/stable/s3tools.key | sudo apt-key add -
-#wget -O/etc/apt/sources.list.d/s3tools.list http://s3tools.org/repo/deb-all/stable/s3tools.list
-#apt-get update && apt-get install s3cmd
+# Install s3cmd
 #
+# === Authors
+#
+# Lorenzo Cocchi <lorenzo.cocchi@softecspa.it>
+#
+
 class s3cmd::install {
-  package { 's3cmd':
-    ensure  => present
+
+  $project = 's3tools'
+  $program = 's3cmd'
+
+  package {
+    'git':              ensure  =>  present;
+    'python-dateutil':  ensure  =>  present;
+    's3cmd':            ensure  =>  absent;
   }
+
+  vcsrepo { "/usr/share/${project}":
+    ensure    =>  latest,
+    provider  =>  git,
+    owner     =>  'root',
+    group     =>  'root',
+    require   =>  [ Package['git'], ],
+    source    =>  "https://github.com/$project/$program.git",
+  }
+
+  file { "/usr/share/${project}/$program":
+    owner     => 'root',
+    group     => 'root',
+    mode      => '755',
+    require   =>  [ Vcsrepo["/usr/share/${project}"], ],
+  }
+
+  file { '/usr/local/bin/s3cmd':
+    ensure    =>  'link',
+    target    =>  "/usr/share/${project}/$program",
+    require   =>  [ Vcsrepo["/usr/share/${project}"], ],
+  }
+
 }
