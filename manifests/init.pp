@@ -26,7 +26,12 @@
 #
 # Felice Pizzurro <felice.pizzurro@softecspa.it>
 #
-class s3cmd ($access_key='', $secret_key='', $https=true) {
+class s3cmd (
+  $access_key = $::aws_access_key,
+  $secret_key = $::aws_secret_key,
+  $https      = true
+
+) {
 
   if ( $access_key == '' or $secret_key == '') {
     fail("Please specify access/secret key!")
