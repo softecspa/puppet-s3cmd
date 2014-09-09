@@ -15,6 +15,7 @@ class s3cmd::install {
   package {
     'git':              ensure  =>  present;
     'python-dateutil':  ensure  =>  present;
+    'python-magic':     ensure  =>  present;
     's3cmd':            ensure  =>  absent;
   }
 
