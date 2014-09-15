@@ -20,7 +20,7 @@ class s3cmd::install {
   }
 
   vcsrepo { "/usr/share/${project}":
-    ensure    =>  'master',
+    ensure    =>  present,
     provider  =>  git,
     owner     =>  'root',
     group     =>  'root',
