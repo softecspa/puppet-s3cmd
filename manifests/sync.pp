@@ -21,6 +21,8 @@
 #      true:  S3 -> local
 #      false: local -> S3
 #
+# [*delete*]
+#   Specifies if you want remove remote files, removed locally
 define s3cmd::sync (
   $source,
   $bucket_name,

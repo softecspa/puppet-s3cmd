@@ -22,10 +22,6 @@
 #   secret_key => "yyyyyyyyyy",
 #  }
 #
-# === Authors
-#
-# Felice Pizzurro <felice.pizzurro@softecspa.it>
-#
 class s3cmd (
   $access_key = $::aws_access_key,
   $secret_key = $::aws_secret_key,
